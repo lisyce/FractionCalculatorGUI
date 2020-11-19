@@ -8,6 +8,11 @@ public class Fraction {
 
     public Fraction(String stringFraction) {
         this.stringFraction = stringFraction;
+        setValues();
+
+    }
+
+    private void setValues() {
         try {
             this.numerator = numeratorFromString(stringFraction);
             this.denominator = denomFromString(stringFraction);
@@ -23,6 +28,7 @@ public class Fraction {
 
     public void setStringFraction(String stringFraction) {
         this.stringFraction = stringFraction;
+        setValues();
     }
 
     public int getNumerator() {
