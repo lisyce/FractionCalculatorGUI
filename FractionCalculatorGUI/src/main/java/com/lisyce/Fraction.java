@@ -4,8 +4,10 @@ public class Fraction {
     private int numerator;
     private int denominator;
     private boolean valid;
+    private String stringFraction = "";
 
     public Fraction(String stringFraction) {
+        this.stringFraction = stringFraction;
         try {
             this.numerator = numeratorFromString(stringFraction);
             this.denominator = denomFromString(stringFraction);
@@ -13,6 +15,14 @@ public class Fraction {
         } catch(Exception e){
             this.valid = false;
         }
+    }
+
+    public String getStringFraction() {
+        return stringFraction;
+    }
+
+    public void setStringFraction(String stringFraction) {
+        this.stringFraction = stringFraction;
     }
 
     public int getNumerator() {

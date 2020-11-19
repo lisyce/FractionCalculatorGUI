@@ -4,3 +4,5 @@ com/lisyce/Controller.java
  com.lisyce.Controller
 com/lisyce/Main.java
  com.lisyce.Main
+com/lisyce/EnterFraction.java
+ com.lisyce.EnterFraction
