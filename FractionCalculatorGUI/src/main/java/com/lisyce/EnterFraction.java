@@ -36,11 +36,14 @@ public class EnterFraction {
             for(int j=3; j>0; j--) {
                 Button numButton = new Button(Integer.toString(currentLoopNum));
                 numButton.setOnAction(e -> {
+                    Controller.getSelf().getOutput().setText("");
                     String addedChar = numButton.getText();
                     if(checkLength(correspondingFraction.getStringFraction())){
                         correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
                         displayFractionLabel.setText(correspondingFraction.getStringFraction());
-                    } //TODO add an else statement so that an error for too many entered characters is displayed
+                    } else {
+                        Controller.getSelf().getOutput().setText("Too many characters");
+                    }
                 });
                 numButton.setPrefSize(NUM_BUTTON_SIZE, NUM_BUTTON_SIZE);
                 buttonVBox.getChildren().add(numButton);
@@ -64,7 +67,9 @@ public class EnterFraction {
                     if(checkLength(correspondingFraction.getStringFraction())){
                         String addedChar = button.getText();
                         correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
-                    } //TODO add an else statement so that an error for too many entered characters is displayed
+                    } else {
+                        Controller.getSelf().getOutput().setText("Too many characters");
+                    }
                 } else {
                     //handle presses of the backspace button
                     if (correspondingFraction.getStringFraction().length() > 0) {

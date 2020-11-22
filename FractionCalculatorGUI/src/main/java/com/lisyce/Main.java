@@ -62,8 +62,13 @@ public class Main extends Application{
         Controller.getSelf().getOutput().setPrefSize(operatorBox.getPrefWidth(), 40);
 
         operatorBox.getChildren().add(Controller.getSelf().getOutput());
+        //add button to clear the output box
+        Button clearBtn = new Button("Clear");
+        operatorBox.getChildren().add(clearBtn);
+        clearBtn.setOnAction(e -> {
+            Controller.getSelf().getOutput().setText("");
+        });
 
-        //TODO make the operator buttons handle events
         addBtn.setOnAction(e -> {
             Controller.getSelf().getOutput().setText(add(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true));
         });
@@ -72,7 +77,16 @@ public class Main extends Application{
             Controller.getSelf().getOutput().setText(subtract(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
         });
 
+        multBtn.setOnAction(e -> {
+            Controller.getSelf().getOutput().setText(multiply(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true));
+        });
+
+        divBtn.setOnAction(e -> {
+            Controller.getSelf().getOutput().setText(divide(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
+        });
+
         //add the two fraction button sets that corresponding to the fractions from the controller
+        //also add the operator box
         mainHBox.getChildren().addAll(new EnterFraction(Controller.getSelf().getFrac1()).fractionEnterVBox("Fraction 1"),
                 new EnterFraction(Controller.getSelf().getFrac2()).fractionEnterVBox("Fraction 2"), operatorBox);
         mainVBox.getChildren().addAll(titleLabel, mainHBox);
@@ -88,17 +102,25 @@ public class Main extends Application{
         int num2Numerator = num2.getNumerator();
         num2.setNumerator(num2.getDenominator());
         num2.setDenominator(num2Numerator);
-        return multiply(num1, num2);
+        return multiply(num1, num2, false);
     }
 
-    public static String multiply(Fraction num1, Fraction num2) {
-        Fraction copyNum1 = new Fraction(num1.getStringFraction());
-        Fraction copyNum2 = new Fraction(num2.getStringFraction());
+    public static String multiply(Fraction num1, Fraction num2, boolean copy) {
+        Fraction copyNum1;
+        Fraction copyNum2;
+        if(copy) {
+            copyNum1 = new Fraction(num1.getStringFraction());
+            copyNum2 = new Fraction(num2.getStringFraction());
+        } else {
+            copyNum1 = num1;
+            copyNum2 = num2;
+        }
 
         if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
         int totalNumerator = copyNum1.getNumerator() * copyNum2.getNumerator();
-        int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
+        //int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
+        int commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
         if(copyNum1.getDenominator() == copyNum2.getDenominator() && copyNum1.getDenominator() % totalNumerator != 0) commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
 
         return (simplify(new Fraction(totalNumerator + "/" + commonDenominator)));
@@ -127,8 +149,8 @@ public class Main extends Application{
 
         if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
-        int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
-
+        //int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
+        int commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
         copyNum1.setNumerator(copyNum1.getNumerator() * (commonDenominator/copyNum1.getDenominator()));
         copyNum2.setNumerator(copyNum2.getNumerator() * (commonDenominator/copyNum2.getDenominator()));
 
@@ -157,6 +179,8 @@ public class Main extends Application{
         return num1 * num2;
     }
 
+    //FIXME make sure that the leftover fraction is also simplified in the mixed number
+
     public static String simplify(Fraction fraction) {
         if(fraction.getNumerator() % fraction.getDenominator() == 0 && fraction.getNumerator() >= fraction.getDenominator()) {
             return Integer.toString(fraction.getNumerator() / fraction.getDenominator());
@@ -167,6 +191,7 @@ public class Main extends Application{
             return (wholeNum + " " + fraction.getNumerator() + "/" + fraction.getDenominator());
         } else if (!(simplifiedDenom(fraction.getNumerator(), fraction.getDenominator()) == fraction.getNumerator() * fraction.getDenominator())) {
             int denom = simplifiedDenom(fraction.getNumerator(), fraction.getDenominator());
+            System.out.println(fraction.getDenominator());
             return(fraction.getNumerator()/denom + "/" + fraction.getDenominator()/denom);
         }
 
