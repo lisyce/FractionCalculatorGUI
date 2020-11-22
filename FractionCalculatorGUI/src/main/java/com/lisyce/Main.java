@@ -65,7 +65,11 @@ public class Main extends Application{
 
         //TODO make the operator buttons handle events
         addBtn.setOnAction(e -> {
-            Controller.getSelf().getOutput().setText(add(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
+            Controller.getSelf().getOutput().setText(add(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true));
+        });
+
+        subBtn.setOnAction(e -> {
+            Controller.getSelf().getOutput().setText(subtract(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
         });
 
         //add the two fraction button sets that corresponding to the fractions from the controller
@@ -97,20 +101,29 @@ public class Main extends Application{
         int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
         if(copyNum1.getDenominator() == copyNum2.getDenominator() && copyNum1.getDenominator() % totalNumerator != 0) commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
 
-        return totalNumerator + "/" + commonDenominator;
+        return (simplify(new Fraction(totalNumerator + "/" + commonDenominator)));
     }
 
     public static String subtract(Fraction num1, Fraction num2) {
-
-        if(num1.getDenominator() == 0 || num2.getDenominator() == 0) return "Cannot divide by 0";
-
-        num2.setNumerator(num2.getNumerator() * -1);
-        return add(num1, num2);
-    }
-
-    public static String add(Fraction num1, Fraction num2){
         Fraction copyNum1 = new Fraction(num1.getStringFraction());
         Fraction copyNum2 = new Fraction(num2.getStringFraction());
+
+        if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
+
+        copyNum2.setNumerator(copyNum2.getNumerator() * -1);
+        return add(copyNum1, copyNum2, false);
+    }
+
+    public static String add(Fraction num1, Fraction num2, boolean copy){
+        Fraction copyNum1;
+        Fraction copyNum2;
+        if (copy) {
+            copyNum1 = new Fraction(num1.getStringFraction());
+            copyNum2 = new Fraction(num2.getStringFraction());
+        } else {
+            copyNum1 = num1;
+            copyNum2 = num2;
+        }
 
         if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
@@ -118,6 +131,7 @@ public class Main extends Application{
 
         copyNum1.setNumerator(copyNum1.getNumerator() * (commonDenominator/copyNum1.getDenominator()));
         copyNum2.setNumerator(copyNum2.getNumerator() * (commonDenominator/copyNum2.getDenominator()));
+
         int totalNumerator = copyNum1.getNumerator() + copyNum2.getNumerator();
         return (simplify(new Fraction(totalNumerator + "/" + commonDenominator)));
     }
@@ -144,7 +158,7 @@ public class Main extends Application{
     }
 
     public static String simplify(Fraction fraction) {
-        if(fraction.getNumerator() % fraction.getDenominator() == 0) {
+        if(fraction.getNumerator() % fraction.getDenominator() == 0 && fraction.getNumerator() >= fraction.getDenominator()) {
             return Integer.toString(fraction.getNumerator() / fraction.getDenominator());
         } else if (fraction.getNumerator() > fraction.getDenominator()) {
             int remainder = fraction.getNumerator() % fraction.getDenominator();
