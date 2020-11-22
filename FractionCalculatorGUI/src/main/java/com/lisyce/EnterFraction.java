@@ -8,39 +8,39 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class EnterFraction {
+
+    private final Fraction correspondingFraction;
     private final int BUTTON_SPACING = 5;
     private final int NUM_BUTTON_SIZE = 30;
-    private final Fraction correspondingFraction;
 
     public EnterFraction(Fraction correspondingFraction) {
         this.correspondingFraction = correspondingFraction;
     }
 
     public VBox fractionEnterVBox(String bottomLabel) {
-        VBox fractionEnterVBox = new VBox();
-        fractionEnterVBox.setSpacing(BUTTON_SPACING);
+        VBox fractionEnterVBox = new VBox(BUTTON_SPACING);
 
         //label that displays the entered fraction once entered is clicked
         Label displayFractionLabel = new Label("");
         displayFractionLabel.setStyle("-fx-border-color: black");
-        displayFractionLabel.setPrefSize((NUM_BUTTON_SIZE + BUTTON_SPACING) * 2 + NUM_BUTTON_SIZE, 30);
+        displayFractionLabel.setPrefSize((BUTTON_SPACING + NUM_BUTTON_SIZE) * 2 + NUM_BUTTON_SIZE, 30);
         displayFractionLabel.setPadding(new Insets(5, 10, 5, 10));
         displayFractionLabel.setAlignment(Pos.CENTER_RIGHT);
 
 
         //create the grid of numbers 1-9
         int currentLoopNum = 7;
-        HBox buttonHBox = new HBox();
-        buttonHBox.setSpacing(BUTTON_SPACING);
+        HBox buttonHBox = new HBox(BUTTON_SPACING);
         for(int i=3; i>0; i--) {
-            VBox buttonVBox = new VBox();
-            buttonVBox.setSpacing(BUTTON_SPACING);
+            VBox buttonVBox = new VBox(BUTTON_SPACING);
             for(int j=3; j>0; j--) {
                 Button numButton = new Button(Integer.toString(currentLoopNum));
                 numButton.setOnAction(e -> {
                     String addedChar = numButton.getText();
-                    correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
-                    displayFractionLabel.setText(correspondingFraction.getStringFraction());
+                    if(checkLength(correspondingFraction.getStringFraction())){
+                        correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
+                        displayFractionLabel.setText(correspondingFraction.getStringFraction());
+                    } //TODO add an else statement so that an error for too many entered characters is displayed
                 });
                 numButton.setPrefSize(NUM_BUTTON_SIZE, NUM_BUTTON_SIZE);
                 buttonVBox.getChildren().add(numButton);
@@ -50,9 +50,8 @@ public class EnterFraction {
             currentLoopNum += 10;
         }
 
-
         //add the row of special buttons
-        HBox specialButtons = new HBox();
+        HBox specialButtons = new HBox(BUTTON_SPACING);
         Button divideButton = new Button("/");
         Button zeroButton = new Button("0");
         Button backspaceButton = new Button("<-");
@@ -62,8 +61,10 @@ public class EnterFraction {
             button.setOnAction(e -> {
                 if(!button.getText().equals(backspaceButton.getText())) {
                     //add chars to the string fraction if it's the 0 or the divide key
-                    String addedChar = button.getText();
-                    correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
+                    if(checkLength(correspondingFraction.getStringFraction())){
+                        String addedChar = button.getText();
+                        correspondingFraction.setStringFraction(correspondingFraction.getStringFraction() + addedChar);
+                    } //TODO add an else statement so that an error for too many entered characters is displayed
                 } else {
                     //handle presses of the backspace button
                     if (correspondingFraction.getStringFraction().length() > 0) {
@@ -75,10 +76,6 @@ public class EnterFraction {
             });
             specialButtons.getChildren().add(button);
         }
-        specialButtons.setSpacing(BUTTON_SPACING);
-
-        //checks to make sure that the stringfraction isn't more than 12 characters long so it fits in the box
-
 
         //label that displays which fraction the buttons refer to
         Label footer = new Label(bottomLabel);
@@ -90,6 +87,11 @@ public class EnterFraction {
         fractionEnterVBox.setAlignment(Pos.CENTER);
 
         return fractionEnterVBox;
+    }
+
+    //checks to make sure that the stringfraction isn't more than 12 characters long so it fits in the box
+    private boolean checkLength(String stringFraction) {
+        return stringFraction.length() < 12;
     }
 
 }

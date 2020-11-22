@@ -1,5 +1,8 @@
 package com.lisyce;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 //Singleton class
@@ -7,19 +10,27 @@ public class Controller {
     private final Stage window = new Stage();
     private Fraction frac1 = new Fraction("");
     private Fraction frac2 = new Fraction("");
+    private Label output = new Label("");
 
     private final static Controller INSTANCE = new Controller();
 
     //private constructor
     private Controller() {
         window.setTitle("Fraction Calculator");
+        this.output = new Label("");
+        output.setAlignment(Pos.CENTER);
+        output.setStyle("-fx-font-size: 15; -fx-border-color: black");
+        output.setPadding(new Insets(5, 5, 5, 5));
     }
 
     //you can only get the single instance of the object
-    public static Controller getInstance() {
+    public static Controller getSelf() {
         return INSTANCE;
     }
 
+    public Label getOutput() {
+        return this.output;
+    }
 
     public Stage getWindow() {
         return window;

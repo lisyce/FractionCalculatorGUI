@@ -1,6 +1,6 @@
 package com.lisyce;
 
-public class Fraction {
+public class Fraction{
     private int numerator;
     private int denominator;
     private boolean valid;
@@ -11,6 +11,7 @@ public class Fraction {
         setValues();
 
     }
+
 
     private void setValues() {
         try {
@@ -53,11 +54,18 @@ public class Fraction {
 
     private int denomFromString(String fraction){
         int slashIndex = fraction.indexOf('/');
-        return Integer.parseInt(fraction.substring(slashIndex + 1));
+        if (slashIndex == -1 || slashIndex == fraction.length() - 1) {
+            return 1;
+        } else {
+            return Integer.parseInt(fraction.substring(slashIndex + 1));
+        }
     }
 
     private int numeratorFromString(String fraction){
         int slashIndex = fraction.indexOf('/');
+        if(slashIndex == -1){
+            return Integer.parseInt(fraction);
+        }
         return Integer.parseInt(fraction.substring(0, slashIndex));
     }
 
