@@ -166,24 +166,28 @@ public class Main extends Application{
         return num1 * num2;
     }
 
-    //FIXME make sure that the leftover fraction is also simplified in the mixed number
-
     public static String simplify(Fraction fraction) {
+
         //check if the answer is 0 and output a plain 0 for it
         if(fraction.getNumerator() == 0) {
             return "0";
         }
 
-        //check if the number is whole and negative
-        if(fraction.getNumerator() < 0 || fraction.getDenominator() == 1) return Integer.toString(fraction.getNumerator());
+        //check if the number is whole
+        if(fraction.getDenominator() == 1) return Integer.toString(fraction.getNumerator());
 
         //general simplification
-        if(fraction.getNumerator() % fraction.getDenominator() == 0 && fraction.getNumerator() >= fraction.getDenominator()) {
+        if((fraction.getNumerator() % fraction.getDenominator() == 0) && (fraction.getNumerator() >= fraction.getDenominator() || fraction.getNumerator() * -1 >= fraction.getDenominator())) {
+            System.out.println("got here");
             return Integer.toString(fraction.getNumerator() / fraction.getDenominator());
-        } else if (fraction.getNumerator() > fraction.getDenominator()) {
+        } else if ((fraction.getNumerator() > fraction.getDenominator()) || (fraction.getDenominator() < 0 && fraction.getNumerator() < fraction.getDenominator())) {
             int remainder = fraction.getNumerator() % fraction.getDenominator();
             int wholeNum = (fraction.getNumerator() - remainder) / fraction.getDenominator();
             fraction.setNumerator(fraction.getNumerator() - (wholeNum * fraction.getDenominator()));
+            if (!(simplifiedDenom(fraction.getNumerator(), fraction.getDenominator()) == fraction.getNumerator() * fraction.getDenominator())) {
+                int denom = simplifiedDenom(fraction.getNumerator(), fraction.getDenominator());
+                return (wholeNum + " " + fraction.getNumerator() / denom + "/" + fraction.getDenominator() / denom);
+            }
             return (wholeNum + " " + fraction.getNumerator() + "/" + fraction.getDenominator());
         } else if (!(simplifiedDenom(fraction.getNumerator(), fraction.getDenominator()) == fraction.getNumerator() * fraction.getDenominator())) {
             int denom = simplifiedDenom(fraction.getNumerator(), fraction.getDenominator());
@@ -192,6 +196,5 @@ public class Main extends Application{
 
         return fraction.getStringFraction();
     }
-
 
 }
