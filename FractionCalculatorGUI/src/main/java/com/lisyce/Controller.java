@@ -8,9 +8,11 @@ import javafx.stage.Stage;
 //Singleton class
 public class Controller {
     private final Stage window = new Stage();
-    private Fraction frac1 = new Fraction("");
-    private Fraction frac2 = new Fraction("");
-    private Label output = new Label("");
+    private final Fraction frac1 = new Fraction("");
+    private final Fraction frac2 = new Fraction("");
+    private final Label output;
+    private final Label enterField1 = new Label("");
+    private final Label enterField2 = new Label("");
 
     private final static Controller INSTANCE = new Controller();
 
@@ -27,6 +29,15 @@ public class Controller {
     public static Controller getSelf() {
         return INSTANCE;
     }
+
+    public Label getEnterField1() {
+        return enterField1;
+    }
+
+    public Label getEnterField2() {
+        return enterField2;
+    }
+
 
     public Label getOutput() {
         return this.output;
@@ -48,15 +59,8 @@ public class Controller {
         return frac1;
     }
 
-    public void setFrac1(Fraction frac1) {
-        this.frac1 = frac1;
-    }
-
     public Fraction getFrac2() {
         return frac2;
     }
 
-    public void setFrac2(Fraction frac2) {
-        this.frac2 = frac2;
-    }
 }

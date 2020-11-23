@@ -10,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
+//TODO implement a button to handle negative numbers if time
+
 public class Main extends Application{
 
     Controller controller = Controller.getSelf();
@@ -67,28 +69,24 @@ public class Main extends Application{
         operatorBox.getChildren().add(clearBtn);
         clearBtn.setOnAction(e -> {
             Controller.getSelf().getOutput().setText("");
+            Controller.getSelf().getEnterField1().setText("");
+            Controller.getSelf().getFrac1().setStringFraction("");
+            Controller.getSelf().getEnterField2().setText("");
+            Controller.getSelf().getFrac2().setStringFraction("");
         });
 
-        addBtn.setOnAction(e -> {
-            Controller.getSelf().getOutput().setText(add(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true));
-        });
+        addBtn.setOnAction(e -> Controller.getSelf().getOutput().setText(add(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true)));
 
-        subBtn.setOnAction(e -> {
-            Controller.getSelf().getOutput().setText(subtract(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
-        });
+        subBtn.setOnAction(e -> Controller.getSelf().getOutput().setText(subtract(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2())));
 
-        multBtn.setOnAction(e -> {
-            Controller.getSelf().getOutput().setText(multiply(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true));
-        });
+        multBtn.setOnAction(e -> Controller.getSelf().getOutput().setText(multiply(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2(), true)));
 
-        divBtn.setOnAction(e -> {
-            Controller.getSelf().getOutput().setText(divide(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2()));
-        });
+        divBtn.setOnAction(e -> Controller.getSelf().getOutput().setText(divide(Controller.getSelf().getFrac1(), Controller.getSelf().getFrac2())));
 
         //add the two fraction button sets that corresponding to the fractions from the controller
         //also add the operator box
-        mainHBox.getChildren().addAll(new EnterFraction(Controller.getSelf().getFrac1()).fractionEnterVBox("Fraction 1"),
-                new EnterFraction(Controller.getSelf().getFrac2()).fractionEnterVBox("Fraction 2"), operatorBox);
+        mainHBox.getChildren().addAll(new EnterFraction(Controller.getSelf().getFrac1(), Controller.getSelf().getEnterField1()).fractionEnterVBox("Fraction 1"),
+                new EnterFraction(Controller.getSelf().getFrac2(), Controller.getSelf().getEnterField2()).fractionEnterVBox("Fraction 2"), operatorBox);
         mainVBox.getChildren().addAll(titleLabel, mainHBox);
         mainScene = new Scene(mainVBox, controller.getWINDOW_WIDTH(), controller.getWINDOW_HEIGHT());
         stage.setScene(mainScene);
@@ -116,10 +114,11 @@ public class Main extends Application{
             copyNum2 = num2;
         }
 
+        if(copyNum1.getNumerator() == 0 || copyNum2.getNumerator() == 0) return "0";
+
         if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
         int totalNumerator = copyNum1.getNumerator() * copyNum2.getNumerator();
-        //int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
         int commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
         if(copyNum1.getDenominator() == copyNum2.getDenominator() && copyNum1.getDenominator() % totalNumerator != 0) commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
 
@@ -149,24 +148,12 @@ public class Main extends Application{
 
         if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
-        //int commonDenominator = leastCommonMultiple(copyNum1.getDenominator(), copyNum2.getDenominator());
         int commonDenominator = copyNum1.getDenominator() * copyNum2.getDenominator();
         copyNum1.setNumerator(copyNum1.getNumerator() * (commonDenominator/copyNum1.getDenominator()));
         copyNum2.setNumerator(copyNum2.getNumerator() * (commonDenominator/copyNum2.getDenominator()));
 
         int totalNumerator = copyNum1.getNumerator() + copyNum2.getNumerator();
         return (simplify(new Fraction(totalNumerator + "/" + commonDenominator)));
-    }
-
-    public static int leastCommonMultiple(int num1, int num2) {
-        int lcd = num1 * num2;
-        for (int i=lcd-1; i>1; i--){
-            if(lcd % i == 0 && (num1 % i == 0 && num2 % i == 0)) {
-                lcd = lcd / i;
-                break;
-            }
-        }
-        return lcd;
     }
 
     public static int simplifiedDenom(int num1, int num2) {
@@ -182,6 +169,15 @@ public class Main extends Application{
     //FIXME make sure that the leftover fraction is also simplified in the mixed number
 
     public static String simplify(Fraction fraction) {
+        //check if the answer is 0 and output a plain 0 for it
+        if(fraction.getNumerator() == 0) {
+            return "0";
+        }
+
+        //check if the number is whole and negative
+        if(fraction.getNumerator() < 0 || fraction.getDenominator() == 1) return Integer.toString(fraction.getNumerator());
+
+        //general simplification
         if(fraction.getNumerator() % fraction.getDenominator() == 0 && fraction.getNumerator() >= fraction.getDenominator()) {
             return Integer.toString(fraction.getNumerator() / fraction.getDenominator());
         } else if (fraction.getNumerator() > fraction.getDenominator()) {
@@ -191,7 +187,6 @@ public class Main extends Application{
             return (wholeNum + " " + fraction.getNumerator() + "/" + fraction.getDenominator());
         } else if (!(simplifiedDenom(fraction.getNumerator(), fraction.getDenominator()) == fraction.getNumerator() * fraction.getDenominator())) {
             int denom = simplifiedDenom(fraction.getNumerator(), fraction.getDenominator());
-            System.out.println(fraction.getDenominator());
             return(fraction.getNumerator()/denom + "/" + fraction.getDenominator()/denom);
         }
 

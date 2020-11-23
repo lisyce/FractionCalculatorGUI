@@ -3,8 +3,7 @@ package com.lisyce;
 public class Fraction{
     private int numerator;
     private int denominator;
-    private boolean valid;
-    private String stringFraction = "";
+    private String stringFraction;
 
     public Fraction(String stringFraction) {
         this.stringFraction = stringFraction;
@@ -12,14 +11,14 @@ public class Fraction{
 
     }
 
-
     private void setValues() {
         try {
             this.numerator = numeratorFromString(stringFraction);
             this.denominator = denomFromString(stringFraction);
-            this.valid = true;
-        } catch(Exception e){
-            this.valid = false;
+        } catch(Exception ignored){}
+        if(this.stringFraction.equals("")) {
+            this.numerator = 0;
+            this.denominator = 1;
         }
     }
 
@@ -46,10 +45,6 @@ public class Fraction{
 
     public void setDenominator(int newDenominator) {
         denominator = newDenominator;
-    }
-
-    public boolean getValid() {
-        return valid;
     }
 
     private int denomFromString(String fraction){

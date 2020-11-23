@@ -12,8 +12,10 @@ public class EnterFraction {
     private final Fraction correspondingFraction;
     private final int BUTTON_SPACING = 5;
     private final int NUM_BUTTON_SIZE = 30;
+    private Label displayFractionLabel;
 
-    public EnterFraction(Fraction correspondingFraction) {
+    public EnterFraction(Fraction correspondingFraction, Label displayFractionLabel) {
+        this.displayFractionLabel = displayFractionLabel;
         this.correspondingFraction = correspondingFraction;
     }
 
@@ -21,7 +23,6 @@ public class EnterFraction {
         VBox fractionEnterVBox = new VBox(BUTTON_SPACING);
 
         //label that displays the entered fraction once entered is clicked
-        Label displayFractionLabel = new Label("");
         displayFractionLabel.setStyle("-fx-border-color: black");
         displayFractionLabel.setPrefSize((BUTTON_SPACING + NUM_BUTTON_SIZE) * 2 + NUM_BUTTON_SIZE, 30);
         displayFractionLabel.setPadding(new Insets(5, 10, 5, 10));
