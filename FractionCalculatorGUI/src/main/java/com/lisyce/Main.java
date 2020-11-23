@@ -10,8 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.application.Application;
 
-//TODO implement a button to handle negative numbers if time
-
 public class Main extends Application{
 
     Controller controller = Controller.getSelf();
@@ -94,13 +92,14 @@ public class Main extends Application{
     }
 
     public static String divide(Fraction num1, Fraction num2) {
+        Fraction copyNum1 = new Fraction(num1.getStringFraction());
+        Fraction copyNum2 = new Fraction(num2.getStringFraction());
+        if(copyNum1.getDenominator() == 0 || copyNum2.getDenominator() == 0) return "Cannot divide by 0";
 
-        if(num1.getDenominator() == 0 || num2.getDenominator() == 0) return "Cannot divide by 0";
-
-        int num2Numerator = num2.getNumerator();
-        num2.setNumerator(num2.getDenominator());
-        num2.setDenominator(num2Numerator);
-        return multiply(num1, num2, false);
+        int num2Numerator = copyNum2.getNumerator();
+        copyNum2.setNumerator(copyNum2.getDenominator());
+        copyNum2.setDenominator(num2Numerator);
+        return multiply(copyNum1, copyNum2, false);
     }
 
     public static String multiply(Fraction num1, Fraction num2, boolean copy) {
