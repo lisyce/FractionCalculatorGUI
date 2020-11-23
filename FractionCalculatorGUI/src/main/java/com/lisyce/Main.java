@@ -178,7 +178,6 @@ public class Main extends Application{
 
         //general simplification
         if((fraction.getNumerator() % fraction.getDenominator() == 0) && (fraction.getNumerator() >= fraction.getDenominator() || fraction.getNumerator() * -1 >= fraction.getDenominator())) {
-            System.out.println("got here");
             return Integer.toString(fraction.getNumerator() / fraction.getDenominator());
         } else if ((fraction.getNumerator() > fraction.getDenominator()) || (fraction.getDenominator() < 0 && fraction.getNumerator() < fraction.getDenominator())) {
             int remainder = fraction.getNumerator() % fraction.getDenominator();
